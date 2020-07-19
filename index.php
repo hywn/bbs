@@ -1,43 +1,45 @@
-<!-- HTML for submitting a new comment (calls submit.php) -->
-<form method="post" action="submit.php">
-	<table>
-		<tr>
-			<td>pid:</td>
-			<td><textarea name="pid"></textarea></td>
-			<td>comment:</td>
-			<td><textarea name="comment"></textarea></td>
-		</tr>
-		<tr><td></td><td><input type="submit" /></td>
-	</table>
-
 <?php
+if (!isset($_GET['pid']))
+	$pid = "main";
+else
+	$pid = $_GET['pid'];
 
+# TODO: clean up this code and comment it
 
-//open database
-$db = new SQLite3('./posts.db');
+$id_parts = preg_split('/\./', $pid);
+[$my_pid, $my_id] = sizeof($id_parts) == 1
+	? [null, null]
+	: [join(".", array_slice($id_parts, 0, sizeof($id_parts) - 1)), $id_parts[sizeof($id_parts) - 1]];
 
-$db->query('create table if not exists posts (
-        parent text,
-        id integer primary key autoincrement not null,
-        comment text
-  )');
+require '2fun.php';
 
-  // using SQL, gets all comments from database
-$result = $db->query('select * from posts');
-
-// loops through all comments and displays them in HTML
-while($row = $result->fetcharray()) {
-
-	list($parent, $id, $comment) = $row;
-
-	echo '<div class="post">';//idk what this does
-	echo $id;//idk what this does
-	echo "$comment";
-	echo '</div';//idk what this is for
-
+echo "<h1>you are browsing $pid</h1>";
+if ($my_id) {
+	$comment = get_comment($my_pid, $my_id);
+	echo "<blockquote>$comment</blockquote>";
 }
-
-// I think this is just cleanup or something <- by j. hwang
-$result->finalize();
+if ($my_pid)
+	echo "<h2><a href=\"?pid=$my_pid\">[go back]</a></h2>";
 
 ?>
+
+<!-- HTML for submitting a new comment (calls submit.php) -->
+<form method="post" action="submit.php">
+	<input type="hidden" name="pid" value="<?php echo $pid ?>">
+	<table>
+		<tr><td>post to <?php echo $pid ?>:</td><td><textarea placeholder="your message here" name="comment"></textarea></td></tr>
+		<tr><td></td><td><input type="submit" /></td></tr>
+	</table>
+</form>
+<dl><?php
+foreach (get_posts($pid) as $post) {
+
+	[, $id, $text] = $post;
+	echo "<dt><a href=\"?pid=$pid.$id\">$id</a>: $text</dt>";
+
+	foreach (get_posts("$pid.$id") as $comment) {
+		[, $cid, $ctext] = $comment;
+		echo "<dd><a href=\"?pid=$pid.$id.$cid\">$cid</a>: $ctext</dd>";
+	}
+}
+?></dl>
