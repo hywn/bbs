@@ -18,7 +18,9 @@ function store_post($pid, $comment){
 	$db->query('create table if not exists posts (
 		parent  text    not null,
 		id      integer not null,
-		comment text
+		comment text,
+
+		unique(parent, id)
 	)');
 
 	$statement = $db->prepare('select max(id) from posts where parent = :pid');
@@ -30,6 +32,15 @@ function store_post($pid, $comment){
 	$statement->bindValue(':pid', $pid);
 	$statement->bindValue(':comment', clean($comment));
 	$statement->execute();
+}
+
+function get_comment($pid, $id){
+	$db = new SQLite3('./posts.db');
+	$statement = $db->prepare('select comment from posts where parent = :pid and id = :id');
+	$statement->bindValue(':pid', $pid);
+	$statement->bindValue(':id', $id);
+
+	return $statement->execute()->fetchArray()[0];
 }
 
 # function to sanitize data

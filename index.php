@@ -5,13 +5,20 @@ else
 	$pid = $_GET['pid'];
 
 $id_parts = preg_split('/\./', $pid);
-$my_id    = sizeof($id_parts) == 1
-	? $pid
-	: join(".", array_slice($id_parts, 0, sizeof($id_parts) - 1));
+[$my_pid, $my_id] = sizeof($id_parts) == 1
+	? [null, null]
+	: [join(".", array_slice($id_parts, 0, sizeof($id_parts) - 1)), $id_parts[sizeof($id_parts) - 1]];
+
+require '2fun.php';
 
 echo "<h1>you are browsing $pid</h1>";
-if ($my_id != $pid)
-	echo "<h2><a href=\"?pid=$my_id\">[go back]</a></h2>";
+if ($my_id) {
+	$comment = get_comment($my_pid, $my_id);
+	echo "<blockquote>$comment</blockquote>";
+}
+if ($my_pid)
+	echo "<h2><a href=\"?pid=$my_pid\">[go back]</a></h2>";
+
 ?>
 
 <!-- HTML for submitting a new comment (calls submit.php) -->
@@ -23,8 +30,6 @@ if ($my_id != $pid)
 	</table>
 </form>
 <dl><?php
-
-require '2fun.php';
 foreach (get_posts($pid) as $post) {
 
 	[, $id, $text] = $post;
