@@ -1,43 +1,32 @@
+<?php
+if (!isset($_GET['pid']))
+	die("oop can't find that !!");
+
+$pid = $_GET['pid'];
+
+echo "<h1>you are browsing $pid</h1>";
+?>
+
 <!-- HTML for submitting a new comment (calls submit.php) -->
 <form method="post" action="submit.php">
+	<input type="hidden" name="pid" value="<?php echo $pid ?>">
 	<table>
-		<tr>
-			<td>pid:</td>
-			<td><textarea name="pid"></textarea></td>
-			<td>comment:</td>
-			<td><textarea name="comment"></textarea></td>
-		</tr>
-		<tr><td></td><td><input type="submit" /></td>
+		<tr><td>post to <?php echo $pid ?>:</td><td><textarea placeholder="your message here" name="comment"></textarea></td></tr>
+		<tr><td></td><td><input type="submit" /></td></tr>
 	</table>
+</form>
+<dl><?php
 
-<?php
+require '2fun.php';
+foreach (get_posts($pid) as $post) {
 
+	[, $id, $text] = $post;
+	echo "<dt><a href=\"?pid=$pid.$id\">$id</a>: $text</dt>";
 
-//open database
-$db = new SQLite3('./posts.db');
-
-$db->query('create table if not exists posts (
-	parent text,
-	id integer primary key autoincrement not null,
-	comment text
-)');
-
-  // using SQL, gets all comments from database
-$result = $db->query('select * from posts');
-
-// loops through all comments and displays them in HTML
-while($row = $result->fetcharray()) {
-
-	list($parent, $id, $comment) = $row;
-
-	echo '<div class="post">';//idk what this does
-	echo $id;//idk what this does
-	echo "$comment";
-	echo '</div';//idk what this is for
-
+	foreach (get_posts("$pid.$id") as $comment) {
+		[, $cid, $ctext] = $comment;
+		echo "<dd><a href=\"?pid=$pid.$id.$cid\">$cid</a>: $ctext</dd>";
+	}
 }
 
-// I think this is just cleanup or something <- by j. hwang
-$result->finalize();
-
-?>
+?></dl>
