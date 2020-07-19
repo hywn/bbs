@@ -1,14 +1,15 @@
 <?php
 function get_posts($pid){
 	$db = new SQLite3('./posts.db');
-	$result = $db->query('select * from posts where parent = $pid'); // get pid's children
+	$statement = $db->prepare('select * from posts where parent = :pid'); // get pid's children
+	$statement->bindValue(':pid', $pid);
+	$result = $statement->execute();
 
-	$array; // declare an array??? i dont know if this would work
-	while($row = $result->fetcharray()) {
-		list($parent, $id, $text) = $row;
-		array_push($array, $parent, $id, $text);// add a new element to $array
-	}
+	$array = [];
+	while($row = $result->fetcharray())
+		array_push($array, $row);
 
+	$result->finalize();
 	return $array;
 }
 
