@@ -1,10 +1,17 @@
 <?php
 if (!isset($_GET['pid']))
-	die("oop can't find that !!");
+	$pid = "main";
+else
+	$pid = $_GET['pid'];
 
-$pid = $_GET['pid'];
+$id_parts = preg_split('/\./', $pid);
+$my_id    = sizeof($id_parts) == 1
+	? $pid
+	: join(".", array_slice($id_parts, 0, sizeof($id_parts) - 1));
 
 echo "<h1>you are browsing $pid</h1>";
+if ($my_id != $pid)
+	echo "<h2><a href=\"?pid=$my_id\">[go back]</a></h2>";
 ?>
 
 <!-- HTML for submitting a new comment (calls submit.php) -->
