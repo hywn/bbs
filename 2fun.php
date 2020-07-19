@@ -28,10 +28,16 @@ function store_post($pid, $comment){
 	$statement = $db->prepare('insert into posts (parent, id, comment) values (:pid, :id, :comment)');
 	$statement->bindValue(':id', $max + 1);
 	$statement->bindValue(':pid', $pid);
-	$statement->bindValue(':comment', $comment);
+	$statement->bindValue(':comment', clean($comment));
 	$statement->execute();
+}
 
-	//
-	//return $nid;
+# function to sanitize data
+# (prevents unexpected, bad things from happening)
+function clean($data) {
+	$data = trim($data);
+	$data = stripslashes($data);
+	$data = htmlspecialchars($data);
+	return $data;
 }
 ?>
