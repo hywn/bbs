@@ -17,10 +17,10 @@
 $db = new SQLite3('./posts.db');
 
 $db->query('create table if not exists posts (
-        parent text,
-        id integer primary key autoincrement not null,
-        comment text
-  )');
+	parent text,
+	id integer primary key autoincrement not null,
+	comment text
+)');
 
   // using SQL, gets all comments from database
 $result = $db->query('select * from posts');

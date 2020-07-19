@@ -1,24 +1,24 @@
 <?php
 function get_posts($pid){
-    $db = new SQLite3('./posts.db');
-    $result = $db->query('select * from posts where parent = $pid'); // get pid's children
+	$db = new SQLite3('./posts.db');
+	$result = $db->query('select * from posts where parent = $pid'); // get pid's children
 
-    $array; // declare an array??? i dont know if this would work
-    while($row = $result->fetcharray()) {
-        list($parent, $id, $text) = $row;
-        array_push($array, $parent, $id, $text);// add a new element to $array
-    }
+	$array; // declare an array??? i dont know if this would work
+	while($row = $result->fetcharray()) {
+		list($parent, $id, $text) = $row;
+		array_push($array, $parent, $id, $text);// add a new element to $array
+	}
 
-    return $array;
+	return $array;
 }
 
 function store_post($pid, $comment){
 	$db = new SQLite3('./posts.db');
 	$db->query('create table if not exists posts (
-	        parent text,
-	        id integer primary key autoincrement not null,
-	        comment text
-	  )');
+		parent text,
+		id integer primary key autoincrement not null,
+		comment text
+	)');
 
 
 	$statement = $db->prepare('insert into posts (parent, comment) values (:pid, :comment)');
@@ -26,7 +26,7 @@ function store_post($pid, $comment){
 	$statement->bindValue(':comment', $comment);
 	$statement->execute();
 
-  //$statement = $db->prepare('select max(id) from posts where parent = $pid"'';
+	//$statement = $db->prepare('select max(id) from posts where parent = $pid"'';
 	//return $nid;
 }
 
