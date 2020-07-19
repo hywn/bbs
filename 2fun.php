@@ -23,7 +23,7 @@ function get_posts($pid)
 {
 	$db = get_db();
 
-	$statement = $db->prepare('select * from posts where parent = :pid'); // get pid's children
+	$statement = $db->prepare('select * from posts where parent = :pid order by id desc'); // get pid's children
 	$statement->bindValue(':pid', $pid);
 
 	$result = $statement->execute();
