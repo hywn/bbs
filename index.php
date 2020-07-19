@@ -4,6 +4,8 @@ if (!isset($_GET['pid']))
 else
 	$pid = $_GET['pid'];
 
+# TODO: clean up this code and comment it
+
 $id_parts = preg_split('/\./', $pid);
 [$my_pid, $my_id] = sizeof($id_parts) == 1
 	? [null, null]
@@ -40,5 +42,4 @@ foreach (get_posts($pid) as $post) {
 		echo "<dd><a href=\"?pid=$pid.$id.$cid\">$cid</a>: $ctext</dd>";
 	}
 }
-
 ?></dl>
