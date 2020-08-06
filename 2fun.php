@@ -1,27 +1,22 @@
 <?php
-# given:  nothing
-# return: SQLite database
-# do:     make sure database is set up correctly
-function get_db()
-{
-	$db = new SQLite3('./posts.db');
 
-	$db->query('create table if not exists posts (
-		parent  text    not null,
-		id      integer not null,
-		comment text,
+# initialize database
 
-		unique(parent, id)
-	)');
+$db = new SQLite3('./posts.db');
 
-	return $db;
-}
+$db->query('create table if not exists posts (
+	parent  text    not null,
+	id      integer not null,
+	comment text,
+
+	unique(parent, id)
+)');
 
 # given:  $pid (parent post ID)
 # return: all posts underneath parent
 function get_posts($pid)
 {
-	$db = get_db();
+	global $db;
 
 	$statement = $db->prepare('select * from posts where parent = :pid order by id desc'); // get pid's children
 	$statement->bindValue(':pid', $pid);
@@ -40,7 +35,7 @@ function get_posts($pid)
 # do:     stores comment in database as a new post under parent post
 function store_post($pid, $comment)
 {
-	$db = get_db();
+	global $db;
 
 	$statement = $db->prepare('select max(id) from posts where parent = :pid');
 	$statement->bindValue(':pid', $pid);
@@ -59,7 +54,7 @@ function store_post($pid, $comment)
 # returns: the comment stored at this post
 function get_comment($pid, $id)
 {
-	$db = get_db();
+	global $db;
 
 	$statement = $db->prepare('select comment from posts where parent = :pid and id = :id');
 	$statement->bindValue(':pid', $pid);
