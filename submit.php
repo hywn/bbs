@@ -12,6 +12,7 @@ require '2fun.php';
 store_post($pid, $comment);
 
 # display confirmation
+# TODO: redirect back to view parent post?
 echo "thank you for your comment!<br />";
-echo "<a href=\"index.php?pid=$pid\">[return to index]</a>";
+echo "<a href=\"temp.html?id=$pid\">[return]</a>";
 ?>
