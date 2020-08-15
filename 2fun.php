@@ -30,6 +30,34 @@ function get_posts($pid)
 	return $array;
 }
 
+// TODO?: only recurse depth of 2?
+// for performance?
+function get_posts_rec($pid)
+{
+	global $db;
+
+	$statement = $db->prepare('select * from posts where parent = :pid order by id desc'); // get pid's children
+	$statement->bindValue(':pid', $pid);
+
+	$result = $statement->execute();
+
+	//if ($result === null) {
+	//	$result->finalize();
+	//	return 'done';
+	//}
+
+	$posts = [];
+	while($post = $result->fetcharray(SQLITE3_ASSOC)) {
+		$post['children'] = get_posts_rec("$pid.{$post['id']}");
+
+		array_push($posts, $post);
+	}
+
+	$result->finalize();
+
+	return $posts;
+}
+
 # given:  $pid (parent post ID), $comment (comment text)
 # return: nothing
 # do:     stores comment in database as a new post under parent post
