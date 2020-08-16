@@ -1,5 +1,3 @@
-;(async () => {
-
 const ID = new URLSearchParams(location.search).get('id') || 'main'
 
 document.querySelector('title').setAttribute('value', ID)
@@ -56,5 +54,3 @@ SUBMIT_BUTTON.addEventListener('click', e => {
 
 	CONTENT_FIELD.value = ''
 })
-
-})();
