@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Topic</title>
+  <style>
+    ::webkit-scrollbar {
+      width: 10px;
+    }
+    textarea{
+      resize: none;
+    }
+  </style>
+</head>
+
+<body style="background-color:powderblue">
+  <h1 style="font-size:40px; font-family:courier">Topic1</h1>
+  <hr>
+
+  <div id = "div">
+    <p style="font-size:25px; font-family:courier">Please write anything you would like regarding the topic </p>
+  </div>
+
+  <form>
+    <label style = "font-family:courier">Name:</label>
+    <br>
+    <textarea id = "name" rows = "1" cols = "20" style = "font-family:courier"></textarea>
+    <br>
+    <label style = "font-family:courier">Message:</label>
+    <br>
+    <textarea id = "content" rows = "4" cols = "100" style = "font-family:courier"></textarea>
+    <br>
+    <input type = "button" value = "done" onclick = "myFunction()" style = "font-family:courier">
+  </form>
+
+  <script language = "javascript">
+  document.getElementById("button").addEventListener("click", myFunction);
+  function myFunction(){
+    let temp = document.createElement('p');
+    temp.innerHTML = document.getElementById("name").value + ":<br>";
+    temp.innerHTML += document.getElementById("content").value;
+    temp.style = "font-family:courier; background-color: pink; padding: 10px";
+    let div = document.getElementById("div");
+    div.append(temp);
+    document.getElementById("name").value = "";
+    document.getElementById("content").value = "";
+  }
+  </script>
+</body>
+
+</html>
