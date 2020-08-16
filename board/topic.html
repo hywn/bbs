@@ -9,13 +9,20 @@
     textarea{
       resize: none;
     }
+	.post {
+		font-family:courier;
+		background-color: pink;
+		border: outset;
+		padding: 10px;
+		margin: 0.2em
+	}
+	img { max-height: 10em; max-width: 10em; }
   </style>
 </head>
 
 <body style="background-color:powderblue">
   <h1 style="font-size:40px; font-family:courier">Topic1</h1>
   <hr>
-
   <div id = "div">
     <p style="font-size:25px; font-family:courier">Please write anything you would like regarding the topic </p>
   </div>
@@ -27,6 +34,8 @@
     <br>
     <input id = "submit_button" type = "button" value = "done" style = "font-family:courier">
   </form>
+  <hr>
+  <div id = "posts"></div>
 </body>
 
 <script src='./topic.js'></script>
