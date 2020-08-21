@@ -21,7 +21,7 @@ const display_content =
 const display =
 	post => `
 		<div class='post'>
-			${post.id}: (display date here) <a href="?id=${post.parent}.${post.id}">[view/reply]</a>
+			${post.id}: (${new Date(post.date * 1000).toLocaleString()}) <a href="?id=${post.parent}.${post.id}">[view/reply]</a>
 			<blockquote>${display_content(post.comment)}</blockquote>
 			${post.children.map(display).join('')}
 		</div>
