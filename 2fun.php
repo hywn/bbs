@@ -7,7 +7,7 @@ $db = new SQLite3('./posts.db');
 $db->query('create table if not exists posts (
 	parent  text    not null,
 	id      integer not null,
-	comment text,
+	comment text    not null,
 
 	unique(parent, id)
 )');
@@ -52,7 +52,7 @@ function store_post($pid, $comment)
 
 	$max = $statement->execute()->fetchArray()[0] or 0;
 
-	$statement = $db->prepare('insert into posts (parent, id, comment) values (:pid, :id, :comment)');
+	$statement = $db->prepare('insert into posts values (:pid, :id, :comment)');
 	$statement->bindValue(':id', $max + 1);
 	$statement->bindValue(':pid', $pid);
 	$statement->bindValue(':comment', clean($comment));
