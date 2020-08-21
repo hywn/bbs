@@ -30,7 +30,7 @@ const display =
 const display_posts =
 	async () =>
 {
-	const posts = await fetch(`../get_posts.php?pid=${parent}`)
+	const posts = await fetch(`./get_posts.php?pid=${parent}`)
 		.then(r => r.json())
 		.then(j => child
 			? j.filter(({ id }) => id === child)
@@ -48,7 +48,7 @@ const CONTENT_FIELD = document.querySelector('#content')
 SUBMIT_BUTTON.addEventListener('click', e => {
 	const text = CONTENT_FIELD.value
 
-	fetch(`../submit.php`, { method: 'post', body: new URLSearchParams({ pid: ID, comment: text }) })
+	fetch(`./submit.php`, { method: 'post', body: new URLSearchParams({ pid: ID, comment: text }) })
 		.then(r => {})
 		.then(display_posts)
 
