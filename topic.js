@@ -1,5 +1,3 @@
-;(async () => {
-
 const ID = new URLSearchParams(location.search).get('id') || 'main'
 
 document.querySelector('title').setAttribute('value', ID)
@@ -23,7 +21,7 @@ const display_content =
 const display =
 	post => `
 		<div class='post'>
-			${post.id}: (display date here) <a href="?id=${post.parent}.${post.id}">[view/reply]</a>
+			${post.id}: (${new Date(post.date * 1000).toLocaleString()}) <a href="?id=${post.parent}.${post.id}">[view/reply]</a>
 			<blockquote>${display_content(post.comment)}</blockquote>
 			${post.children.map(display).join('')}
 		</div>
@@ -32,7 +30,7 @@ const display =
 const display_posts =
 	async () =>
 {
-	const posts = await fetch(`../get_posts.php?pid=${parent}`)
+	const posts = await fetch(`./get_posts.php?pid=${parent}`)
 		.then(r => r.json())
 		.then(j => child
 			? j.filter(({ id }) => id === child)
@@ -50,11 +48,9 @@ const CONTENT_FIELD = document.querySelector('#content')
 SUBMIT_BUTTON.addEventListener('click', e => {
 	const text = CONTENT_FIELD.value
 
-	fetch(`../submit.php`, { method: 'post', body: new URLSearchParams({ pid: ID, comment: text }) })
+	fetch(`./submit.php`, { method: 'post', body: new URLSearchParams({ pid: ID, comment: text }) })
 		.then(r => {})
 		.then(display_posts)
 
 	CONTENT_FIELD.value = ''
 })
-
-})();
