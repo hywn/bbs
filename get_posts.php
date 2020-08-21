@@ -1,4 +1,6 @@
 <?php
+// TODO: maybe in future make dedicated get_post.php
+
 require '2fun.php';
 
 if (!isset($_GET['pid']))
